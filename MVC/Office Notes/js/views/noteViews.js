@@ -1,6 +1,8 @@
 ﻿var app = app || {};
 
 app.noteViews = (function () {
+    var ITEMS_ON_PAGE = 10;
+
     function NoteViews() {
         this.officeNote = {
             loadOfficeNotesView: loadOfficeNotesView
@@ -19,19 +21,66 @@ app.noteViews = (function () {
         };
     }
 
-    function loadOfficeNotesView(selector, data) {
+    function loadOfficeNotesView(selector, data, page) {
         $.get('templates/officeNoteTemplate.html', function (template) {
-            var outHtml = Mustache.render(template, data);
-            $(selector).html(outHtml)});
+            var index,
+                maxLength = Math.min(page * 10, data.result.length),
+                pageData = {
+                    result: []
+                };
+
+            for (index = (page - 1) * 10; index < maxLength; index++) {
+                pageData.result.push(new Note(data.result[index].title,
+                    data.result[index].text,
+                    data.result[index].author,
+                    data.result[index].deadline,
+                    data.result[index].noteId));
+            }
+
+            var outHtml = Mustache.render(template, pageData);
+            $(selector).html(outHtml)
+        }).then(function () {
+            var itemsCount = data['result'].length;
+
+                $('#pagination').pagination({
+                    items: itemsCount,
+                    itemsOnPage: ITEMS_ON_PAGE,
+                    cssStyle: 'light-theme',
+                    hrefTextPrefix: '#/office/'
+                }).pagination('selectPage', '#/office/');
+            });
     }
 
-    function loadMyNotesView(selector, data) {
+    function loadMyNotesView(selector, data, page) {
         $.get('templates/myNoteTemplate.html', function (template) {
-            var outHtml = Mustache.render(template, data);
-            $(selector).html(outHtml);
+            var index,
+                maxLength = Math.min(page * 10, data.result.length),
+                pageData = {
+                    result: []
+                };
+
+            for (index = (page - 1) * 10; index < maxLength; index++) {
+                pageData.result.push(new Note(data.result[index].title,
+                    data.result[index].text,
+                    data.result[index].author,
+                    data.result[index].deadline,
+                    data.result[index].noteId));
+            }
+
+            var outHtml = Mustache.render(template, pageData);
+            $(selector).html(outHtml)
         }).then(function () {
+            var itemsCount = data['result'].length;
+
+            $('#pagination').pagination({
+                items: itemsCount,
+                itemsOnPage: ITEMS_ON_PAGE,
+                cssStyle: 'light-theme',
+                hrefTextPrefix: '#/myNotes/'
+            }).pagination('selectPage', '#/myNotes/');
+        
             $('.edit').on('click', function () {
-                window.location.replace('#/myNotes/edit/');
+                window.location.replace('#/editNote/');
                 var noteId = $(this).parent().attr('data-id');
                 var item = $('li[data-id="' + noteId + '"]');
 
@@ -52,7 +101,7 @@ app.noteViews = (function () {
             });
 
             $('.delete').on('click', function () {
-                window.location.replace('#/myNotes/delete/');
+                window.location.replace('#/deleteNote/');
                 var noteId = $(this).parent().attr('data-id');
                 var item = $('li[data-id="' + noteId + '"]');
 

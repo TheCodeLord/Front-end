@@ -8,15 +8,13 @@ app.noteModel = (function () {
     }
 
     NoteModel.prototype.listDeadlineNotes = function (date) {
-        var serviceUrl = this.baseUrl + '?query={"deadline":"' +
-            date + '"}&limit=10&skip0';
+        var serviceUrl = this.baseUrl + '?query={"deadline":"' + date + '"}';
 
         return this.requester.get(serviceUrl, this.headers.getHeadersUserAuth());
     };
 
     NoteModel.prototype.listUserNotes = function (userId) {
-        var serviceUrl = this.baseUrl + '?query={"_acl.creator":"' +
-            userId + '"}&limit=10&skip0';
+        var serviceUrl = this.baseUrl + '?query={"_acl.creator":"' + userId + '"}&';
 
         return this.requester.get(serviceUrl, this.headers.getHeadersUserAuth());
     };

@@ -43,22 +43,39 @@
             }
         });
 
-        this.before('#/office/', function () {
-            var userId = sessionStorage['userId'];
+        this.before('#/office/(.*?)', function (data) {
+            var userId = sessionStorage['userId'],
+                tokens = data.path.split('/'),
+                page = tokens[tokens.length - 1];
 
             if (!userId) {
                 this.redirect('#/');
                 return false;
+            }
+
+            if (!page) {
+                this.redirect('#/office/1');
+            } else {
+                this.redirect('#/office/' + page);
             }
         });
 
-        this.before('#/myNotes/', function () {
-            var userId = sessionStorage['userId'];
+        this.before('#/myNotes/(.*?)', function (data) {
+            var userId = sessionStorage['userId'],
+                tokens = data.path.split('/'),
+                page = tokens[tokens.length - 1];
 
             if (!userId) {
                 this.redirect('#/');
                 return false;
             }
+
+            if (!page) {
+                this.redirect('#/myNotes/1');
+            } else {
+                this.redirect('#/myNotes/' + page)
+            }
+            
         });
 
         this.before('#/addNote/', function () {
@@ -70,7 +87,7 @@
             }
         });
 
-        this.before('#/myNotes/edit/', function () {
+        this.before('#/editNote/', function () {
             var userId = sessionStorage['userId'];
 
             if (!userId) {
@@ -79,7 +96,7 @@
             }
         });
 
-        this.before('#/myNotes/delete/', function () {
+        this.before('#/deleteNote/', function () {
             var userId = sessionStorage['userId'];
 
             if (!userId) {
@@ -113,21 +130,27 @@
             userController.loadRegisterPage(selector);
         });
 
-        this.get('#/office/', function () {
-            noteController.listOfficeNotes(selector);
+        this.get('#/office/(.*?)', function (data) {
+            var tokens = data.path.split('/'),
+                page = tokens[tokens.length - 1];
+
+            noteController.listOfficeNotes(selector, page);
         });
 
-        this.get('#/myNotes/', function () {
-            noteController.listUserNotes(selector);
+        this.get('#/myNotes/(.*?)', function (data) {
+            var tokens = data.path.split('/'),
+                page = tokens[tokens.length - 1];
+
+            noteController.listUserNotes(selector, page);
         });
 
         this.get('#/addNote/', function () {
             noteController.loadAddNotePage(selector);
         });
 
-        this.get('#/myNotes/edit/', function () { });
+        this.get('#/editNote/', function () { });
 
-        this.get('#/myNotes/delete/', function () { });
+        this.get('#/deleteNote/', function () { });
 
         this.bind('login', function (e, data) {
             userController.login(data.username, data.password);

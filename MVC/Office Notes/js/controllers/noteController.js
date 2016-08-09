@@ -18,7 +18,7 @@ app.noteController = (function () {
         this.viewBag.deleteNote.loadDeleteNoteView(selector, data);
     };
 
-    NoteController.prototype.listOfficeNotes = function (selector) {
+    NoteController.prototype.listOfficeNotes = function (selector, page) {
         var _this = this;
         var today = new Date();
         var dd = today.getDate();
@@ -33,6 +33,7 @@ app.noteController = (function () {
         }
 
         var date = dd + '/' + mm + '/' + yyyy;
+
         return this.model.listDeadlineNotes(date).then(function (dataArr) {
             var data = {
                 result: []
@@ -43,19 +44,11 @@ app.noteController = (function () {
                     entry.author, entry.deadline, entry._id));
             });
 
-            _this.viewBag.officeNote.loadOfficeNotesView(selector, data);
-        }).then(function () {
-            $('#pagination').pagination({
-                items: 20,
-                itemsOnPage: 10,
-                cssStyle: 'light-theme',
-                hrefTextPrefix: '#/office/'
-            }).pagination('selectPage', 1);
-
+            _this.viewBag.userNotes.loadMyNotesView(selector, data, page);
         });
     };
 
-    NoteController.prototype.listUserNotes = function (selector) {
+    NoteController.prototype.listUserNotes = function (selector, page) {
         var _this = this;
         var userId = sessionStorage['userId'];
 
@@ -69,7 +62,7 @@ app.noteController = (function () {
                     entry.author, entry.deadline, entry._id));
             });
 
-            _this.viewBag.userNotes.loadMyNotesView(selector, data);
+            _this.viewBag.userNotes.loadMyNotesView(selector, data, page);
         });
     };
 
