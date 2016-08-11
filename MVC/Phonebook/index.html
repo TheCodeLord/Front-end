@@ -1,0 +1,44 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Phonebook</title>
+	<meta charset="utf-8" />
+    <meta name="author" content="TheCodeLord" />
+    <link href="style/styles.css" rel="stylesheet" />
+
+    <script src="js/libs/jquery-2.1.4.js"></script>
+    <script src="js/libs/mustache.js"></script>
+    <script src="js/libs/sammy.js"></script>
+    <script src="js/libs/q.js"></script>
+    <script src="js/libs/jquery.noty.packaged.js"></script>
+</head>
+<body>
+    <header id="header">Phonebook<span></span></header>
+    <ul id="menu">
+        <li><a href="#/home/" class="link">Home</a></li>
+        <li><a href="#/phonebook/" class="link">Phonebook</a></li>
+        <li><a href="#/phonebook/add-phone/" class="link">Add Phone</a></li>
+        <li><a href="#/edit-profile/" class="link">Edit Profile</a></li>
+        <li><a href="#/logout/" class="link">Logout</a></li>
+    </ul>
+    <main id="wrapper"></main>
+    <footer id="footer">&copy; 2014 by Software University Foundation, No Rights Reserved</footer>
+
+    <script src="js/bindingModels/phone.js"></script>
+
+    <script src="js/models/requester.js"></script>
+    <script src="js/models/headers.js"></script>
+    <script src="js/models/userModel.js"></script>
+    <script src="js/models/phoneModel.js"></script>
+
+    <script src="js/views/homeViews.js"></script>
+    <script src="js/views/userView.js"></script>
+    <script src="js/views/phoneViews.js"></script>
+
+    <script src="js/controllers/userController.js"></script>
+    <script src="js/controllers/phoneController.js"></script>
+    <script src="js/controllers/homeController.js"></script>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
