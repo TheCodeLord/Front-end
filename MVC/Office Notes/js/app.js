@@ -21,10 +21,12 @@
         var selector = '#container';
 
         this.before(function () {
-            var userId = sessionStorage['userId'];
+            var userId = sessionStorage['userId'],
+                username = sessionStorage['username'];
 
             if (userId) {
                 $('#menu').show();
+                $('#welcomeMenu').text('Welcome, ' + username);
             } else {
                 $('#menu').hide();
             }
@@ -123,7 +125,14 @@
         });
 
         this.get('#/logout/', function () {
-            userController.logout();
+            userController.logout()
+                .then(function () {
+                    app.router.setLocation('#/myNotes/');
+                    showSuccessMessage('You have successfully logged out');
+                }, function (error) {
+                    app.router.setLocation('#/myNotes/');
+                    showErrorMessage('Logout failed: ' + error.responseJSON.error);
+                });
         });
 
         this.get('#/register/', function () {
@@ -153,15 +162,44 @@
         this.get('#/deleteNote/', function () { });
 
         this.bind('login', function (e, data) {
-            userController.login(data.username, data.password);
+            userController.login(data.username, data.password)
+                .then(function () {
+                    app.router.setLocation('#/home/');
+                    showSuccessMessage('You have successfully logged in');
+                }, function (error) {
+                    app.router.setLocation('#/login/');
+                    showErrorMessage('Login in failed: ' + error.responseJSON.error);
+                });
         });
 
         this.bind('register', function (e, data) {
-            userController.register(data.username, data.password, data.fullName);
+            if (!checkUserData(data)) {
+                return;
+            }
+
+            userController.register(data.username, data.password, data.fullName)
+                .then(function () {
+                    app.router.setLocation('#/home/');
+                    showSuccessMessage('You have successfully registered');
+                }, function (error) {
+                    app.router.setLocation('#/register/');
+                    showErrorMessage('Register failed: ' + error.responseJSON.error);
+                });
         });
 
         this.bind('addNote', function (e, data) {
-            noteController.addNote(data.title, data.text, data.deadline);
+            if (!checkNoteData(data)) {
+                return;
+            }
+
+            noteController.addNote(data.title, data.text, data.deadline)
+                .then(function () {
+                    app.router.setLocation('#/myNotes/');
+                    showSuccessMessage('You have added new note successfully');
+                }, function (error) {
+                    app.router.setLocation('#/myNotes/');
+                    showErrorMessage('Adding note failed: ' + error.responseJSON.error);
+                });
         });
 
         this.bind('loadEditNotePage', function (e, data) {
@@ -169,7 +207,18 @@
         });
 
         this.bind('editNote', function (e, data) {
-            noteController.editNote(data.noteId, data.title, data.text, data.deadline);
+            if (!checkNoteData(data)) {
+                return;
+            }
+
+            noteController.editNote(data.noteId, data.title, data.text, data.deadline)
+                .then(function () {
+                    app.router.setLocation('#/myNotes/');
+                    showSuccessMessage('You have successfully edited your note');
+                }, function (error) {
+                    app.router.setLocation('#/myNotes/');
+                    showErrorMessage('Editing note failed: ' + error.responseJSON.error);
+                });
         });
 
         this.bind('loadDeleteNotePage', function (e, data) {
@@ -177,9 +226,64 @@
         });
 
         this.bind('deleteNote', function (e, data) {
-            noteController.deleteNote(data.noteId);
+            noteController.deleteNote(data.noteId)
+                .then(function () {
+                    app.router.setLocation('#/myNotes/');
+                    showSuccessMessage('You have successfully deleted your note');
+                }, function (error) {
+                    app.router.setLocation('#/myNotes/');
+                    showErrorMessage('Deleting note failed: ' + error.responseJSON.error);
+                });
         });
     });
 
-    app.router.run('#/')
+    app.router.run('#/');
+
+    function showSuccessMessage(text) {
+        noty({
+            text: text,
+            type: 'success',
+            layout: 'topCenter',
+            timeout: 1000
+        });
+    }
+
+    function showErrorMessage(text) {
+        noty({
+            text: text,
+            type: 'error',
+            layout: 'topCenter',
+            timeout: 2500
+        });
+    }
+
+    function checkUserData(data) {
+        if (data.username.length < 3) {
+            showErrorMessage('Username cannot be less than 3 chars');
+            return false;
+        } else if (data.password.length < 3) {
+            showErrorMessage('Password cannot be less than 3 chars');
+            return false;
+        } else if (data.fullName.length < 3) {
+            showErrorMessage('Full name cannot be less than 3 chars');
+            return false;
+        }
+
+        return true;
+    }
+
+    function checkNoteData(data) {
+        if (data.title.length < 3) {
+            showErrorMessage('Title cannot be less than 3 chars');
+            return false;
+        } else if (data.text.length < 3) {
+            showErrorMessage('Text cannot be less than 3 chars');
+            return false;
+        } else if (data.deadline.length < 10 || data.deadline.length > 10) {
+            showErrorMessage('Deadline must be in formar "DD/MM/YYYY"');
+            return false;
+        }
+
+        return true;
+    }
 })();

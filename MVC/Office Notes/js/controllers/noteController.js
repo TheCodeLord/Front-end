@@ -76,11 +76,7 @@ app.noteController = (function () {
             author: author
         };
 
-        return this.model.addNote(data).then(function () {
-            window.location.replace('#/myNotes/');
-        }, function (error) {
-
-        });
+        return this.model.addNote(data);
     };
 
     NoteController.prototype.editNote = function (noteId, title, text, deadline) {
@@ -93,15 +89,11 @@ app.noteController = (function () {
             author: author
         };
 
-        return this.model.editNote(noteId, data).then(function (data) {
-            window.location.replace('#/myNotes/');
-        });
+        return this.model.editNote(noteId, data);
     };
 
     NoteController.prototype.deleteNote = function (noteId) {
-        return this.model.deleteNote(noteId).then(function (data) {
-            window.location.replace('#/myNotes/');
-        });
+        return this.model.deleteNote(noteId);
     };
 
     return {

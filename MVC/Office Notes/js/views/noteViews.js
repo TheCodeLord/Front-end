@@ -60,11 +60,14 @@ app.noteViews = (function () {
                 };
 
             for (index = (page - 1) * 10; index < maxLength; index++) {
-                pageData.result.push(new Note(data.result[index].title,
-                    data.result[index].text,
-                    data.result[index].author,
-                    data.result[index].deadline,
-                    data.result[index].noteId));
+                pageData.result.push(
+                    new Note(
+                        data.result[index].title,
+                        data.result[index].text,
+                        data.result[index].author,
+                        data.result[index].deadline,
+                        data.result[index].noteId
+                    ));
             }
 
             var outHtml = Mustache.render(template, pageData);
@@ -154,7 +157,7 @@ app.noteViews = (function () {
             $(selector).html(outHtml);
         }).then(function () {
             $('#editNoteButton').on('click', function () {
-                var noteId = $(this).parent().parent().attr('data-id');
+                var noteId = $(this).parent().attr('data-id');
                     title = $('#title').val(),
                     text = $('#text').val(),
                     deadline = $('#deadline').val();

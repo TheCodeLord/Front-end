@@ -18,27 +18,18 @@ app.userController = (function () {
         return this.model.register(username, password, fullName)
             .then(function (data) {
                 setSessionStorage(data);
-                window.location.replace('#/home/');
-            }, function (error) {
-                console.error(error);
             });
     };
 
     UserController.prototype.login = function (username, password) {
         return this.model.login(username, password).then(function (data) {
             setSessionStorage(data);
-            window.location.replace('#/home/');
-        }, function (error) {
-            console.error(error);
         });
     };
 
     UserController.prototype.logout = function () {
         return this.model.logout().then(function () {
             deleteUserFromStorage();
-            window.location.replace('#/');
-        }, function (error) {
-            console.error(error);
         });
     };
 

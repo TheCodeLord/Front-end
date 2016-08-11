@@ -20,8 +20,6 @@
 				edges: 2,
 				currentPage: 0,
 				hrefTextSuffix: '',
-				prevText: 'Prev',
-				nextText: 'Next',
 				ellipseText: '&hellip;',
 				cssStyle: 'light-theme',
 				labelMap: [],
@@ -60,34 +58,6 @@
 
 		selectPage: function(page) {
 			methods._selectPage.call(this, page - 1);
-			return this;
-		},
-
-		prevPage: function() {
-			var o = this.data('pagination');
-			if (!o.invertPageOrder) {
-				if (o.currentPage > 0) {
-					methods._selectPage.call(this, o.currentPage - 1);
-				}
-			} else {
-				if (o.currentPage < o.pages - 1) {
-					methods._selectPage.call(this, o.currentPage + 1);
-				}
-			}
-			return this;
-		},
-
-		nextPage: function() {
-			var o = this.data('pagination');
-			if (!o.invertPageOrder) {
-				if (o.currentPage < o.pages - 1) {
-					methods._selectPage.call(this, o.currentPage + 1);
-				}
-			} else {
-				if (o.currentPage > 0) {
-					methods._selectPage.call(this, o.currentPage - 1);
-				}
-			}
 			return this;
 		},
 
@@ -161,16 +131,6 @@
 			tagName = (typeof this.prop === 'function') ? this.prop('tagName') : this.attr('tagName');
 
 			var $panel = tagName === 'UL' ? this : $('<ul></ul>').appendTo(this);
-
-			// Generate Prev link
-			if (o.prevText) {
-				methods._appendItem.call(this, !o.invertPageOrder ? o.currentPage - 1 : o.currentPage + 1, {text: o.prevText, classes: 'prev'});
-			}
-
-			// Generate Next link (if option set for at front)
-			if (o.nextText && o.nextAtFront) {
-				methods._appendItem.call(this, !o.invertPageOrder ? o.currentPage + 1 : o.currentPage - 1, {text: o.nextText, classes: 'next'});
-			}
 
 			// Generate start edges
 			if (!o.invertPageOrder) {

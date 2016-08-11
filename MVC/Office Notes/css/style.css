@@ -41,7 +41,7 @@ header > h1 {
     background-size: contain;
     width: 76%;
     max-width: 960px;
-    height: 500px;
+    height: 540px;
     padding-bottom: 10px;
     margin-top: 2em;
 }
@@ -55,7 +55,7 @@ h2, p{
 }
 .listItems{
     width: 93%;
-    height: 80%;
+    height: 90%;
     padding: 1.5em 1.5em 0 2.5em;
     margin: auto;
 }
